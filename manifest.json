@@ -29,19 +29,18 @@
       "type": "image/png"
     }
   ],
-  "screenshots": [],
   "shortcuts": [
     {
       "name": "Hanuman Chalisa",
       "short_name": "Chalisa",
       "description": "Open Hanuman Chalisa directly",
-      "url": "/?filter=Chalisa"
+      "url": "/sacredaarti/?filter=Chalisa"
     },
     {
       "name": "Most Popular",
       "short_name": "Popular",
       "description": "Most popular aartis",
-      "url": "/?sort=popular"
+      "url": "/sacredaarti/?sort=popular"
     }
   ]
 }
