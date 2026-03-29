@@ -1,0 +1,46 @@
+{
+  "name": "Sacred Aarti — पवित्र आरती संग्रह",
+  "short_name": "Sacred Aarti",
+  "description": "Complete Hindu devotional hymns in Hindi and English — aartis, chalisa, katha and mantras",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#5C1E00",
+  "theme_color": "#5C1E00",
+  "orientation": "portrait-primary",
+  "lang": "hi",
+  "categories": ["religion", "lifestyle", "education"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Hanuman Chalisa",
+      "short_name": "Chalisa",
+      "description": "Open Hanuman Chalisa directly",
+      "url": "/?filter=Chalisa"
+    },
+    {
+      "name": "Most Popular",
+      "short_name": "Popular",
+      "description": "Most popular aartis",
+      "url": "/?sort=popular"
+    }
+  ]
+}
