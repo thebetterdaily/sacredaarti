@@ -3,12 +3,12 @@
 
 const CACHE_NAME = 'sacred-aarti-v1';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/apple-touch-icon.png'
+'/sacredaarti/',
+'/sacredaarti/index.html',
+'/sacredaarti/manifest.json',
+'/sacredaarti/icon-192.png',
+'/sacredaarti/icon-512.png',
+'/sacredaarti/apple-touch-icon.png'
 ];
 
 // Install: cache all assets
