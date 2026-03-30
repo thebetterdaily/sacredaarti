@@ -2,8 +2,8 @@
   "name": "Sacred Aarti — पवित्र आरती संग्रह",
   "short_name": "Sacred Aarti",
   "description": "Complete Hindu devotional hymns in Hindi and English — aartis, chalisa, katha and mantras",
-  "start_url": "/sacredaarti/",
-  "scope": "/sacredaarti/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#5C1E00",
   "theme_color": "#5C1E00",
@@ -34,13 +34,13 @@
       "name": "Hanuman Chalisa",
       "short_name": "Chalisa",
       "description": "Open Hanuman Chalisa directly",
-      "url": "/sacredaarti/?filter=Chalisa"
+      "url": "/?filter=Chalisa"
     },
     {
       "name": "Most Popular",
       "short_name": "Popular",
       "description": "Most popular aartis",
-      "url": "/sacredaarti/?sort=popular"
+      "url": "/?sort=popular"
     }
   ]
 }

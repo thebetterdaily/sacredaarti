@@ -1,13 +1,12 @@
-// Sacred Aarti — Service Worker v2
-const CACHE_NAME = 'sacred-aarti-v2';
-const BASE = '/sacredaarti';
+// Sacred Aarti — Service Worker v3 (sacredaarti.com)
+const CACHE_NAME = 'sacred-aarti-v3';
 const ASSETS = [
-  BASE + '/',
-  BASE + '/index.html',
-  BASE + '/manifest.json',
-  BASE + '/icon-192.png',
-  BASE + '/icon-512.png',
-  BASE + '/apple-touch-icon.png'
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/apple-touch-icon.png'
 ];
 
 self.addEventListener('install', function(e){
@@ -37,7 +36,7 @@ self.addEventListener('fetch', function(e){
         }
         return res;
       }).catch(function(){
-        return caches.match(BASE + '/index.html');
+        return caches.match('/index.html');
       });
     })
   );
