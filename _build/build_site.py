@@ -10,11 +10,15 @@ BOOK_URL = os.environ.get('SA_BOOK_URL', '')  # Amazon link once the book is liv
 TODAY = datetime.date.today().isoformat()
 VER = datetime.datetime.now().strftime('%Y%m%d%H%M')
 E = html.escape
-ALL = content.build()
+ALL = content.build(more=True)
+import content_more
+for _d, _w, _sl in guide.WEEKDAYS: _sl.extend(x for x in content_more.EXTRA_WEEKDAYS.get(_d, []) if x not in _sl)
+for _f, _n, _sl in guide.FESTIVALS: _sl.extend(x for x in content_more.EXTRA_FESTIVALS.get(_f, []) if x not in _sl)
+guide.FESTIVALS.extend(content_more.NEW_FESTIVALS)
 BY = {a['slug']: a for a in ALL}
 KIND_LABEL = {'aarti':'Aarti','chalisa':'Chalisa','stuti':'Stuti','mantra':'Mantra','shloka':'Shloka','katha':'Vrat Katha'}
 KIND_GROUP = {'aarti':'aarti','chalisa':'chalisa','stuti':'aarti','mantra':'mantra','shloka':'mantra','katha':'katha'}
-DEITY_LABEL = {'SaiBaba':'Sai Baba','Universal':'Universal','Katha':'Katha'}
+DEITY_LABEL = {'SaiBaba':'Sai Baba','Universal':'Universal','Katha':'Katha','KhatuShyam':'Khatu Shyam','Santoshi':'Santoshi Mata'}
 def dl(d): return DEITY_LABEL.get(d, d)
 
 ORDER = sorted(ALL, key=lambda a: (a['pop'] or 999, ['aarti','chalisa','stuti','mantra','shloka','katha'].index(a['kind']), a['deity'], a['title']))
@@ -48,17 +52,17 @@ def page(title, desc, body, canon, active=None, jsonld=None, og_img=None):
 <meta property="og:site_name" content="Sacred Aarti"><meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(desc)}"><meta property="og:type" content="website">
 <meta property="og:url" content="{DOMAIN}{canon}"><meta property="og:image" content="{DOMAIN}{og}"><meta name="twitter:card" content="summary_large_image">
 <meta name="google-site-verification" content="DI1rDFRSuoA8SmptQQa6LwXnj1DVT81m-D4trpJaRhc">
-<meta name="theme-color" content="#FCF5EA" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#5C1E00" media="(prefers-color-scheme: dark)">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Sacred Aarti"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#170B05">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Sacred Aarti"><meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="manifest" href="/manifest.json"><link rel="icon" href="/icon-192.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<script>try{{if(localStorage.getItem('sa-theme')==='diya')document.documentElement.setAttribute('data-theme','diya')}}catch(e){{}}</script>
+<script>try{{if(localStorage.getItem('sa-mode')==='paper')document.documentElement.setAttribute('data-theme','paper')}}catch(e){{}}</script>
 {FONTS}<link rel="stylesheet" href="/assets/style.css?v={VER}">{ld}
 </head><body>
 <div class="rails" aria-label="Sections">{rails}</div>
-<aside class="brand-rail"><a class="om" href="/" aria-label="Sacred Aarti home">ॐ</a><div class="acts"><button data-act="install">add to phone</button><button data-act="theme" aria-label="Toggle evening mode">diya mode</button></div></aside>
+<aside class="brand-rail"><a class="om" href="/" aria-label="Sacred Aarti home">ॐ</a><div class="acts"><button data-act="install">add to phone</button><button data-act="theme" data-lbl="low" aria-label="Switch between day and diya mode">day mode</button></div></aside>
 <header class="mbar"><a class="logo" href="/"><span class="om">ॐ</span>Sacred Aarti</a><button class="install" data-act="install">Add to phone</button></header>
 <main>{body}</main>
-<nav class="dock" aria-label="Menu">{dock}<button data-act="theme" aria-label="Toggle evening mode"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button></nav>
+<nav class="dock" aria-label="Menu"><a href="/#search" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="7" cy="7" r="5"/><path d="M11 11l4 4"/></svg></a>{dock}<button data-act="theme" aria-label="Toggle evening mode"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg></button></nav>
 <footer class="foot"><div><div class="om">ॐ</div>Sacred Aarti · पवित्र आरती संग्रह<br>© {datetime.date.today().year} The Better Daily, LLC{contact}</div>
 <div style="max-width:420px">Texts follow the standard published versions; English meanings are our own. Deity images are artistic representations made with AI tools for devotional use.</div></footer>
 {INSTALL}
@@ -104,12 +108,13 @@ def home():
 <p class="eyebrow"><b>ॐ</b> &nbsp;Sacred Aarti · आरती संग्रह</p>
 <h1 class="hero-t">Every aarti,<br><span class="it">word for word.</span></h1>
 <p class="hero-hi">सम्पूर्ण आरती, चालीसा एवं मन्त्र</p>
-<p class="lede">{n_aarti} complete aartis, four chalisas and daily prayers in Devanagari, easy transliteration and English meaning, so every generation can sing along.</p>
-<div class="ctas"><a class="pill dark" href="#collection">Browse the collection →</a><a class="pill line" href="/guide">How to do aarti at home</a></div>
+<p class="lede">{n_aarti} complete aartis, {len([a for a in ALL if a['kind']=='chalisa'])} chalisas and daily prayers in Devanagari, easy transliteration and English meaning, so every generation can sing along.</p>
+<form class="hsearch" action="/" role="search" onsubmit="return false"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="7" cy="7" r="5"/><path d="M11 11l4 4"/></svg><input id="hq" type="search" placeholder="Find an aarti: Hanuman, Lakshmi, जय…" aria-label="Find an aarti" autocomplete="off"></form>
+<div class="ctas"><a class="pill dark" href="#collection">Browse all {len(ALL)} →</a><a class="pill line" href="/guide">How to do aarti at home</a></div>
 <p class="today" id="today" data-map='{E(json.dumps(wmap))}'></p>
-</div><div class="stage"><canvas id="diya" aria-hidden="true"></canvas><p class="cap">A diya written in the syllables of the aarti</p>{badge}</div></section>
+</div><div class="stage"><canvas id="diya" aria-hidden="true"></canvas><p class="cap">Move your cursor or finger through the diya</p>{badge}</div></section>
 
-<section class="prologue reveal"><p class="tag">( The evening aarti )</p><p>{prologue}</p></section>
+
 
 <section class="sec" id="collection"><div class="sec-h reveal"><span class="big" aria-hidden="true">01</span><h2>The collection</h2><p>Standard texts checked line by line, with the refrain marked the way it is sung.</p></div>
 <div class="tools"><button class="chip on" data-kind="all">All</button><button class="chip" data-kind="aarti">Aartis</button><button class="chip" data-kind="chalisa">Chalisa</button><button class="chip" data-kind="mantra">Mantras &amp; shlokas</button><button class="chip" data-kind="katha">Katha</button>
@@ -117,6 +122,8 @@ def home():
 <div class="deity-row"><button class="chip on" data-deity="all">Every deity</button>{chips}</div>
 <ol class="list" id="list">{rows}</ol><p class="empty" id="empty" style="display:none">Nothing found. Try another word.</p>
 <div class="peek" id="peek"><img alt=""></div></section>
+
+<section class="prologue reveal"><p class="tag">( The evening aarti )</p><p>{prologue}</p></section>
 
 <section class="sec" id="phone"><div class="sec-h reveal"><span class="big" aria-hidden="true">02</span><h2>Keep it on your phone</h2><p>Add Sacred Aarti to your home screen like an app. It is free and opens even without internet.</p></div>
 <div class="keep"><div><h3>iPhone or iPad</h3><ol class="steps"><li>Open sacredaarti.com in <b>Safari</b>.</li><li>Tap the <b>Share</b> button (the square with an arrow ↑).</li><li>Scroll down and tap <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>.</li></ol></div>
@@ -172,7 +179,7 @@ def detail(a, i, prev, nxt):
 <header class="dhead"><div><p class="no">{i:02d} · {KIND_LABEL[a['kind']].upper()}</p><h1>{E(a['title'])}</h1><p class="hi">{a['hi']}</p>
 <div class="facts">{facts}</div></div>{pic}</header>
 <p class="about">{E(a['about'])}</p>
-<div class="ctrl">{layers}<span class="sp"></span><button class="chip" data-act="smaller" aria-label="Smaller text">A−</button><button class="chip" data-act="bigger" aria-label="Larger text">A+</button><button class="chip" data-act="theme">Diya mode</button></div>
+<div class="ctrl">{layers}<span class="sp"></span><button class="chip" data-act="smaller" aria-label="Smaller text">A−</button><button class="chip" data-act="bigger" aria-label="Larger text">A+</button><button class="chip" data-act="theme" data-lbl="cap">Day mode</button></div>
 <article class="verses">{stz}</article>{note}{related(a)}{pn}</div>'''
     name = seo_name(a)
     desc = f"{name} lyrics ({a['hi']}) in Hindi with English transliteration and meaning of every stanza. {a['about']}"
@@ -285,7 +292,7 @@ def main():
     write('/CNAME', 'sacredaarti.com\n')
     write('/manifest.json', json.dumps({"name":"Sacred Aarti · पवित्र आरती संग्रह","short_name":"Sacred Aarti",
         "description":"Complete Hindu aartis, chalisas and mantras in Hindi with English transliteration and meaning","start_url":"/","scope":"/",
-        "display":"standalone","background_color":"#FCF5EA","theme_color":"#5C1E00","lang":"en","categories":["lifestyle","education","books"],
+        "display":"standalone","background_color":"#170B05","theme_color":"#170B05","lang":"en","categories":["lifestyle","education","books"],
         "icons":[{"src":"/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}],
         "shortcuts":[{"name":"Hanuman Chalisa","url":"/aarti/hanuman-chalisa"},{"name":"Om Jai Jagdish Hare","url":"/aarti/om-jai-jagdish-hare"}]}, ensure_ascii=False, indent=1))
     core = ['/', '/guide', '/book', '/assets/style.css?v='+VER, '/assets/app.js?v='+VER, '/manifest.json', '/icon-192.png'] + [f'/aarti/{a["slug"]}' for a in ORDER]
