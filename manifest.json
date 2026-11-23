@@ -5,8 +5,8 @@
  "start_url": "/",
  "scope": "/",
  "display": "standalone",
- "background_color": "#FCF5EA",
- "theme_color": "#5C1E00",
+ "background_color": "#170B05",
+ "theme_color": "#170B05",
  "lang": "en",
  "categories": [
   "lifestyle",
