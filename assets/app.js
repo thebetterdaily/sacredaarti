@@ -135,7 +135,7 @@
   function tab(w){document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('on',b.dataset.tab===w)});
     document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('on',p.id==='p-'+w)});}
   document.addEventListener('click',function(e){var b=e.target.closest('[data-act],[data-tab],.go-install');if(!b)return;
-    if(b.dataset.act==='install'&&modal){e.preventDefault();modal.classList.add('open');tab(/iphone|ipad|ipod|macintosh/i.test(navigator.userAgent)&&'ontouchend' in document||/iphone|ipad|ipod/i.test(navigator.userAgent)?'ios':'android');}
+    if(b.dataset.act==='install'&&modal){e.preventDefault();modal.classList.add('open');var ua=navigator.userAgent;tab(/iphone|ipod/i.test(ua)?'ios':(/ipad/i.test(ua)||(/macintosh/i.test(ua)&&navigator.maxTouchPoints>1))?'ipad':/android/i.test(ua)?'android':'ios');}
     if(b.dataset.act==='close'&&modal)modal.classList.remove('open');
     if(b.dataset.tab)tab(b.dataset.tab);
     if(b.classList.contains('go-install')&&deferred){deferred.prompt();deferred.userChoice.then(function(){deferred=null});}
@@ -144,3 +144,7 @@
 
   if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}
 })();
+/* India: point book links at the Kindle edition on Amazon.in */
+(function(){try{if(!/Asia\/(Kolkata|Calcutta)/.test(Intl.DateTimeFormat().resolvedOptions().timeZone))return;
+document.querySelectorAll('[data-in]').forEach(function(a){a.href=a.getAttribute('data-in');var l=a.getAttribute('data-in-label');if(l)a.textContent=l;});
+document.querySelectorAll('[data-in-hide]').forEach(function(a){a.style.display='none';});}catch(e){}})();
